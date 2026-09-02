@@ -6,10 +6,14 @@ Antibody-guided protein A-Tn5 tagmentation generates transcribable DNA fragments
 loci. These are amplified by in vitro transcription and transferred to a Visium HD Slide on the
 Visium CytAssist instrument, where they are captured on 2 µm barcoded squares.
 
-**Read the protocol:** [chaoyan115.github.io/SPACE-Tag-HD-protocol](https://chaoyan115.github.io/SPACE-Tag-HD-protocol/)
+**Read the protocol:** [protocol.md](protocol.md). A print-ready Word version is
+[SPACE-Tag-HD-protocol.docx](SPACE-Tag-HD-protocol.docx), and [index.html](index.html) is the
+rendered page.
 
-The source is [protocol.md](protocol.md). A print-ready Word version is
-[SPACE-Tag-HD-protocol.docx](SPACE-Tag-HD-protocol.docx).
+> This repository is private while the manuscript is in revision. `index.html` is built and
+> committed on every update, so turning on GitHub Pages (Settings → Pages → Deploy from a branch →
+> `main` → `/ (root)`) publishes the site immediately, at
+> `https://chaoyan115.github.io/SPACE-Tag-HD-protocol/`. Pages requires the repository to be public.
 
 ## Relationship to SPACE-Tag
 
