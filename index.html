@@ -1,0 +1,2145 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang xml:lang>
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>SPACE-Tag-HD Protocol: Spatial Chromatin Profiling</title>
+  <style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+width: 0.8em;
+margin: 0 0.8em 0.2em -1.6em;
+vertical-align: middle;
+}
+.display.math{display: block; text-align: center; margin: 0.5rem auto;}
+</style>
+  <style type="text/css">
+:root {
+--fg: #1f2328;
+--muted: #59636e;
+--faint: #848d97;
+--accent: #0969da;
+--border: #d1d9e0;
+--bg-soft: #f6f8fa;
+--bg: #ffffff;
+--sidebar-w: 18rem;
+--content-w: 50rem;
+}
+@media (prefers-color-scheme: dark) {
+:root {
+--fg: #e6edf3;
+--muted: #9198a1;
+--faint: #6e7681;
+--accent: #4493f8;
+--border: #30363d;
+--bg-soft: #161b22;
+--bg: #0d1117;
+}
+}
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+body {
+font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Noto Sans",
+Helvetica, Arial, sans-serif;
+font-size: 16px;
+line-height: 1.65;
+color: var(--fg);
+background: var(--bg);
+margin: 0;
+padding: 0 1.5rem 6rem;
+word-wrap: break-word;
+}
+
+.topbar {
+display: flex;
+align-items: center;
+gap: .5rem;
+font-size: .875rem;
+padding: .9rem 0 1.6rem;
+color: var(--muted);
+}
+.topbar-mark { font-weight: 600; color: var(--fg); letter-spacing: -.01em; }
+.topbar-sep { color: var(--faint); }
+.topbar-label { color: var(--muted); }
+.topbar-link {
+margin-left: auto;
+color: var(--muted);
+border: 1px solid var(--border);
+border-radius: 6px;
+padding: .25rem .7rem;
+font-size: .8125rem;
+text-decoration: none;
+white-space: nowrap;
+}
+.topbar-link:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+
+body > *:not(nav#TOC) {
+max-width: var(--content-w);
+margin-right: auto;
+}
+
+h1, h2, h3, h4, h5, h6 {
+margin: 2em 0 .7em;
+font-weight: 600;
+line-height: 1.3;
+letter-spacing: -.011em;
+scroll-margin-top: 1.5rem;
+}
+h1 { font-size: 2.1em; margin-top: .4em; padding-bottom: .35em; border-bottom: 1px solid var(--border); }
+h2 { font-size: 1.5em; padding-bottom: .3em; border-bottom: 1px solid var(--border); }
+h3 { font-size: 1.2em; }
+h4 { font-size: 1em; color: var(--muted); text-transform: uppercase; letter-spacing: .05em; font-size: .82em; }
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+p { margin: 0 0 1.05em; }
+ul, ol { margin: 0 0 1.05em; padding-left: 1.7em; }
+li + li { margin-top: .3em; }
+li > ul, li > ol { margin-top: .3em; margin-bottom: .3em; }
+strong { font-weight: 600; }
+
+code {
+font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas,
+"Liberation Mono", monospace;
+font-size: 85%;
+background: var(--bg-soft);
+border: 1px solid var(--border);
+border-radius: 5px;
+padding: .12em .38em;
+}
+pre {
+background: var(--bg-soft);
+border: 1px solid var(--border);
+border-radius: 8px;
+padding: 1em 1.1em;
+overflow-x: auto;
+line-height: 1.5;
+font-size: .9em;
+}
+pre code { background: none; border: 0; padding: 0; font-size: 100%; }
+
+blockquote {
+margin: 1.3em 0;
+padding: .85em 1.1em;
+background: var(--bg-soft);
+border: 1px solid var(--border);
+border-left: 3px solid var(--accent);
+border-radius: 0 8px 8px 0;
+color: var(--fg);
+}
+blockquote > :first-child { margin-top: 0; }
+blockquote > :last-child { margin-bottom: 0; }
+
+table {
+border-collapse: collapse;
+display: block;
+width: fit-content;
+max-width: 100%;
+overflow-x: auto;
+margin: 1.3em 0;
+font-size: .94em;
+border: 1px solid var(--border);
+border-radius: 8px;
+}
+th, td {
+border-bottom: 1px solid var(--border);
+border-right: 1px solid var(--border);
+padding: .55em .9em;
+text-align: left;
+vertical-align: top;
+}
+th:last-child, td:last-child { border-right: 0; }
+tbody tr:last-child td { border-bottom: 0; }
+th { background: var(--bg-soft); font-weight: 600; white-space: nowrap; }
+
+hr { height: 1px; border: 0; background: var(--border); margin: 3em 0; }
+
+nav#TOC {
+font-size: .875rem;
+line-height: 1.45;
+}
+nav#TOC::before {
+content: "Contents";
+display: block;
+font-weight: 600;
+font-size: .72rem;
+color: var(--faint);
+text-transform: uppercase;
+letter-spacing: .08em;
+margin-bottom: .75rem;
+}
+nav#TOC ul { list-style: none; margin: 0; padding-left: .85rem; }
+nav#TOC > ul { padding-left: 0; }
+nav#TOC li { margin: 0; }
+nav#TOC a {
+display: block;
+padding: .2rem 0;
+color: var(--muted);
+border-left: 2px solid transparent;
+padding-left: .6rem;
+margin-left: -.6rem;
+}
+nav#TOC a:hover {
+color: var(--accent);
+border-left-color: var(--accent);
+text-decoration: none;
+}
+nav#TOC > ul > li > a { color: var(--fg); font-weight: 500; }
+
+@media (min-width: 1080px) {
+body { padding-left: calc(var(--sidebar-w) + 3rem); }
+nav#TOC {
+position: fixed;
+top: 0;
+left: 0;
+bottom: 0;
+width: var(--sidebar-w);
+padding: 1.6rem 1.1rem 2rem 1.5rem;
+overflow-y: auto;
+overscroll-behavior: contain;
+border-right: 1px solid var(--border);
+background: var(--bg);
+}
+nav#TOC::-webkit-scrollbar { width: 8px; }
+nav#TOC::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+}
+
+@media (max-width: 1079px) {
+nav#TOC {
+max-width: var(--content-w);
+margin: 0 auto 2.5rem;
+padding: 1rem 1.2rem;
+background: var(--bg-soft);
+border: 1px solid var(--border);
+border-radius: 8px;
+}
+}
+@media (max-width: 600px) {
+body { padding-left: 1rem; padding-right: 1rem; font-size: 15px; }
+h1 { font-size: 1.65em; }
+h2 { font-size: 1.3em; }
+.topbar-link { display: none; }
+}
+</style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<div class="topbar">
+  <span class="topbar-mark">SPACE-Tag-HD</span>
+  <span class="topbar-sep">/</span>
+  <span class="topbar-label">Protocol</span>
+  <a class="topbar-link" href="https://github.com/chaoyan115/SPACE-Tag-HD-protocol">View on GitHub</a>
+</div>
+<nav id="TOC" role="doc-toc">
+<ul>
+<li><a href="#space-tag-hd-protocol-spatial-chromatin-profiling" id="toc-space-tag-hd-protocol-spatial-chromatin-profiling">SPACE-Tag-HD
+Protocol: Spatial Chromatin Profiling</a>
+<ul>
+<li><a href="#solutions-reagents" id="toc-solutions-reagents">Solutions
+&amp; Reagents</a>
+<ul>
+<li><a href="#digi-ct-wash-buffer" id="toc-digi-ct-wash-buffer">digi-CT
+Wash Buffer</a></li>
+<li><a href="#digi-300-wash-buffer" id="toc-digi-300-wash-buffer">digi-300-Wash Buffer</a></li>
+<li><a href="#tagmentation-buffer" id="toc-tagmentation-buffer">Tagmentation Buffer</a></li>
+<li><a href="#x-primer-hybridization-buffer" id="toc-x-primer-hybridization-buffer">2x Primer Hybridization
+Buffer</a></li>
+<li><a href="#additional-reagents-required" id="toc-additional-reagents-required">Additional Reagents
+Required</a></li>
+<li><a href="#visium-hd-specific-items-10x-genomics" id="toc-visium-hd-specific-items-10x-genomics">Visium-HD Specific Items
+(10x Genomics)</a></li>
+</ul></li>
+<li><a href="#day-0-preparation" id="toc-day-0-preparation">Day 0 —
+Preparation</a>
+<ul>
+<li><a href="#a.-adapter-annealing-can-be-done-in-advance" id="toc-a.-adapter-annealing-can-be-done-in-advance">A. Adapter
+Annealing (can be done in advance)</a></li>
+<li><a href="#b.-pa-tn5-dilution-transposon-assembly" id="toc-b.-pa-tn5-dilution-transposon-assembly">B. PA-Tn5 Dilution &amp;
+Transposon Assembly</a></li>
+</ul></li>
+<li><a href="#day-1-protocol-steps" id="toc-day-1-protocol-steps">Day 1
+— Protocol Steps</a>
+<ul>
+<li><a href="#step-0-load-the-pa-tn5" id="toc-step-0-load-the-pa-tn5">Step 0: Load the PA-Tn5</a></li>
+<li><a href="#step-1-formaldehyde-tissue-fixation" id="toc-step-1-formaldehyde-tissue-fixation">Step 1: Formaldehyde Tissue
+Fixation</a></li>
+<li><a href="#step-2-permeabilization" id="toc-step-2-permeabilization">Step 2: Permeabilization</a></li>
+<li><a href="#step-3-primary-antibody-staining" id="toc-step-3-primary-antibody-staining">Step 3: Primary Antibody
+Staining</a></li>
+<li><a href="#step-4-secondary-antibody-staining" id="toc-step-4-secondary-antibody-staining">Step 4: Secondary Antibody
+Staining</a></li>
+<li><a href="#step-5-tagmentation" id="toc-step-5-tagmentation">Step 5:
+Tagmentation</a></li>
+<li><a href="#step-6-tissue-clearing" id="toc-step-6-tissue-clearing">Step 6: Tissue Clearing</a></li>
+<li><a href="#step-7-gap-filling" id="toc-step-7-gap-filling">Step 7:
+Gap Filling</a></li>
+<li><a href="#step-8-in-vitro-transcription" id="toc-step-8-in-vitro-transcription">Step 8: <em>In Vitro</em>
+Transcription</a></li>
+</ul></li>
+<li><a href="#day-2" id="toc-day-2">Day 2</a>
+<ul>
+<li><a href="#step-9-fixation-enhancer-treatment-tissue-slide" id="toc-step-9-fixation-enhancer-treatment-tissue-slide">Step 9:
+Fixation &amp; Enhancer Treatment (tissue slide)</a></li>
+<li><a href="#step-10-he-staining-coverslip-mounting-imaging-tissue-slide" id="toc-step-10-he-staining-coverslip-mounting-imaging-tissue-slide">Step
+10: H&amp;E Staining, Coverslip Mounting &amp; Imaging (tissue
+slide)</a></li>
+<li><a href="#step-11-visium-hd-slide-wash-cytassist-preparation" id="toc-step-11-visium-hd-slide-wash-cytassist-preparation">Step 11:
+Visium HD Slide Wash &amp; CytAssist Preparation</a></li>
+<li><a href="#step-12-destaining-tissue-slide" id="toc-step-12-destaining-tissue-slide">Step 12: Destaining (tissue
+slide)</a></li>
+<li><a href="#step-13-cytassist-enabled-rna-transfer" id="toc-step-13-cytassist-enabled-rna-transfer">Step 13:
+CytAssist-Enabled RNA Transfer</a></li>
+<li><a href="#step-14-reverse-transcription-visium-hd-slide" id="toc-step-14-reverse-transcription-visium-hd-slide">Step 14: Reverse
+Transcription (Visium HD Slide)</a></li>
+<li><a href="#step-15-denaturation-post-rt" id="toc-step-15-denaturation-post-rt">Step 15: Denaturation
+(post-RT)</a></li>
+<li><a href="#step-16-second-strand-synthesis" id="toc-step-16-second-strand-synthesis">Step 16: Second Strand
+Synthesis</a></li>
+<li><a href="#step-17-denaturation-post-second-strand" id="toc-step-17-denaturation-post-second-strand">Step 17: Denaturation
+(post-Second Strand)</a></li>
+<li><a href="#step-18-pcr-library-amplification" id="toc-step-18-pcr-library-amplification">Step 18: PCR Library
+Amplification</a></li>
+</ul></li>
+</ul></li>
+</ul>
+</nav>
+<h1 id="space-tag-hd-protocol-spatial-chromatin-profiling">SPACE-Tag-HD
+Protocol: Spatial Chromatin Profiling</h1>
+<p>SPACE-Tag integrates spatial barcoding with CUT&amp;Tag-based
+epigenomic profiling. Antibody-guided PA-Tn5 tagmentation generates
+transcribable DNA fragments at target chromatin loci, which are then
+spatially captured via in vitro transcription and reverse transcription
+on the Visium-HD slide.</p>
+<p><strong>Tags:</strong> Spatial Epigenomics | CUT&amp;Tag | Visium |
+PA-Tn5 | Histone Modifications<br />
+<strong>Last updated:</strong> September 2, 2026</p>
+<hr />
+<h2 id="solutions-reagents">Solutions &amp; Reagents</h2>
+<p>Prepare all buffers fresh or as needed. Store at 4°C unless otherwise
+noted.</p>
+<h3 id="digi-ct-wash-buffer">digi-CT Wash Buffer</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+<th>Final Conc.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1M HEPES</td>
+<td>200 µl</td>
+<td>20 mM</td>
+</tr>
+<tr class="even">
+<td>5M NaCl</td>
+<td>300 µl</td>
+<td>150 mM</td>
+</tr>
+<tr class="odd">
+<td>6.4M spermidine</td>
+<td>0.78 µl</td>
+<td>0.5 mM</td>
+</tr>
+<tr class="even">
+<td>Protease inhibitor</td>
+<td>1 tablet</td>
+<td>1x</td>
+</tr>
+<tr class="odd">
+<td>5% digitonin</td>
+<td>20 µl</td>
+<td>0.01%</td>
+</tr>
+<tr class="even">
+<td>H₂O</td>
+<td>to 10 ml</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="digi-300-wash-buffer">digi-300-Wash Buffer</h3>
+<blockquote>
+<p>Higher NaCl (300 mM) reduces non-specific Tn5 binding during
+tagmentation.</p>
+</blockquote>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+<th>Final Conc.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1M HEPES</td>
+<td>200 µl</td>
+<td>20 mM</td>
+</tr>
+<tr class="even">
+<td>5M NaCl</td>
+<td>600 µl</td>
+<td>300 mM</td>
+</tr>
+<tr class="odd">
+<td>6.4M spermidine</td>
+<td>0.78 µl</td>
+<td>0.5 mM</td>
+</tr>
+<tr class="even">
+<td>Protease inhibitor</td>
+<td>1 tablet</td>
+<td>1x</td>
+</tr>
+<tr class="odd">
+<td>5% digitonin</td>
+<td>20 µl</td>
+<td>0.01%</td>
+</tr>
+<tr class="even">
+<td>H₂O</td>
+<td>to 10 ml</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="tagmentation-buffer">Tagmentation Buffer</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>digi-300-wash buffer</td>
+<td>1000 µl</td>
+</tr>
+<tr class="even">
+<td>1M MgCl₂</td>
+<td>10 µl (10 mM final)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>MgCl₂ is required for Tn5 transposase activity.</p>
+</blockquote>
+<h3 id="x-primer-hybridization-buffer">2x Primer Hybridization
+Buffer</h3>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+<th>Final Conc.</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>20X SSC</td>
+<td>2 ml</td>
+<td>4X SSC</td>
+</tr>
+<tr class="even">
+<td>100% Formamide</td>
+<td>4 ml</td>
+<td>40%</td>
+</tr>
+<tr class="odd">
+<td>10% Tween-20</td>
+<td>200 µl</td>
+<td>0.2%</td>
+</tr>
+<tr class="even">
+<td>H₂O</td>
+<td>to 10 ml</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="additional-reagents-required">Additional Reagents Required</h3>
+<ul>
+<li>1X PBS</li>
+<li>1X PBS with 1.25 M Glycine</li>
+<li>BD Perm/Wash Buffer (554723)</li>
+<li>40 mM EDTA</li>
+<li>ArrayIT 16-well Hybridization Cassettes (AHC1X16) or Proplate
+(244864, Grace Biolabs)</li>
+</ul>
+<h3 id="visium-hd-specific-items-10x-genomics">Visium-HD Specific Items
+(10x Genomics)</h3>
+<p>Catalog numbers from the <em>Visium HD 3’ Spatial Gene Expression
+User Guide</em> (CG000805 Rev B, pp. 9–11) and the <em>Visium HD 3’
+Fresh Frozen Tissue Preparation Handbook</em> (CG000804 Rev A, pp. 5–6).
+“PN” is the component part number, which is what is printed on the tube;
+the kit PN is what is ordered.</p>
+<p><strong>Top-level kit: Visium HD 3’, 6.5 mm, 4 rxns —
+PN-1000857</strong> (also sold as a 16 rxn kit). It contains the four
+kits below.</p>
+<p><strong>Visium HD Slide, 6.5 mm, 2 rxns — kit PN-1000670</strong>
+(store at −80°C)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>PN</th>
+<th>Used in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Visium HD Slide, 6.5 mm</td>
+<td>2000970</td>
+<td>Steps 11, 13, 14, 15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Visium Slide Cassettes S3, 6.5 mm, 2 pk — kit
+PN-1000847</strong> (ambient)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>PN</th>
+<th>Used in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Visium 2-port, 6.5 mm, Top, 2 pk</td>
+<td>2001252 or 3002329</td>
+<td>Steps 11, 13</td>
+</tr>
+<tr class="even">
+<td>Visium Cassette Bottom, 2 pk</td>
+<td>2001344 or 3002328</td>
+<td>Steps 11, 13</td>
+</tr>
+<tr class="odd">
+<td>Visium Slide Seals, 12 pack</td>
+<td>2000283</td>
+<td>Steps 11, 14, 15</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Visium HD 3’ Reagents Kit A, Small — kit PN-1000854</strong>
+(store at −20°C)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>PN</th>
+<th>Used in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Enhancer</td>
+<td>2000482</td>
+<td>Step 9 (Enhancer Mix)</td>
+</tr>
+<tr class="even">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>Steps 9, 13, 14</td>
+</tr>
+<tr class="odd">
+<td>RNase Inhibitor B</td>
+<td>2001400</td>
+<td>Step 9 (washes, Mounting Medium)</td>
+</tr>
+<tr class="even">
+<td>Pre-equilibration Buffer</td>
+<td>2001399</td>
+<td>Step 11</td>
+</tr>
+<tr class="odd">
+<td>Perm Enzyme B</td>
+<td>3000553</td>
+<td>Step 13</td>
+</tr>
+<tr class="even">
+<td>Perm Buffer</td>
+<td>2001398</td>
+<td>Steps 12, 13</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Visium HD 3’ Reagents Kit B, Small — kit PN-1000855</strong>
+(store at −20°C)</p>
+<table>
+<thead>
+<tr class="header">
+<th>Component</th>
+<th>PN</th>
+<th>Used in</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>RT Reagent</td>
+<td>2000086</td>
+<td>Step 14</td>
+</tr>
+<tr class="even">
+<td>RT Enzyme G</td>
+<td>2001438</td>
+<td>Step 14</td>
+</tr>
+<tr class="odd">
+<td>Template Switch Oligo B</td>
+<td>2001027</td>
+<td>Step 14</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>Kit B also ships Second Strand Enzyme (2000183), Second Strand
+Reagent (2000219), Second Strand Primer (2000217), cDNA Primers
+(2000089), Amp Mix (2000103), Fragmentation Enzyme (2000104),
+Fragmentation Buffer (2000091), DNA Ligase (220131), and Ligation Mix
+(2001109). <strong>SPACE-Tag does not use any of these.</strong> From
+Step 16 onward the protocol uses its own second strand synthesis, and
+library construction is by PCR1 plus index PCR rather than 10x
+fragmentation and ligation.</p>
+</blockquote>
+<p><strong>Accessories</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Item</th>
+<th>PN</th>
+<th>Kit PN</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Visium CytAssist Alignment Aid, 6.5 mm</td>
+<td>3002814</td>
+<td>1000886</td>
+</tr>
+<tr class="even">
+<td>Low Profile Thermocycler Adapter</td>
+<td>3000823</td>
+<td>1000499</td>
+</tr>
+<tr class="odd">
+<td>10x Magnetic Separator</td>
+<td>2001212</td>
+<td>1000499</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Instrument.</strong> Visium CytAssist running
+<strong>firmware 2.0.0 or higher</strong>.</p>
+<p><strong>Non-10x items.</strong> 20X SSC, 8 M KOH, 0.1 N HCl, 1X or
+10X PBS, Low TE Buffer, Qiagen Buffer EB, methanol, acetone, glycerol,
+Gill II Hematoxylin, Bluing Buffer, <strong>alcoholic Eosin used
+undiluted</strong>, seven 1 L beakers, slide mailers, forceps, a 25 ml
+reagent reservoir, wide-bore pipette tips, coverslips, blank slides,
+lint-free laboratory wipes, and 37°C and 65°C temperature-controlled
+instruments. The regular-Visium eosin dilution in Tris-acetic acid
+buffer is not used in the HD workflow. <strong>10x does not publish
+catalog numbers for these in either document</strong>; tested
+third-party part numbers, pipette tips, thermal cyclers, and blank
+slides are listed only in the Visium HD 3’ Protocol Planner (CG000803),
+and 10x notes that substituting untested items may affect
+performance.</p>
+<h2 id="day-0-preparation">Day 0 — Preparation</h2>
+<h3 id="a.-adapter-annealing-can-be-done-in-advance">A. Adapter
+Annealing (can be done in advance)</h3>
+<h4 id="adapter-sequences">Adapter Sequences</h4>
+<p>HPLC purification recommended; alternatively order in ultramer
+format.</p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Name</th>
+<th>Sequence (5’→3’)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>dual_ME19_polyT_v2 (Adapter A)</td>
+<td><code>TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTVNAGATGTGTATAAGAGACAG</code></td>
+</tr>
+<tr class="even">
+<td>T7_MedsB (Adapter B)</td>
+<td><code>GAATTTAATACGACTCACTATAGGGGTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG</code></td>
+</tr>
+<tr class="odd">
+<td>ME_19_Phos (Mosaic Ends)</td>
+<td><code>/5Phos/CTGTCTCTTATACACATCT</code></td>
+</tr>
+</tbody>
+</table>
+<h4 id="annealing-recipe-per-adapter">Annealing Recipe (per
+adapter)</h4>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Adapter A or B (100 µM stock)</td>
+<td>25 µl</td>
+</tr>
+<tr class="even">
+<td>Mosaic ends</td>
+<td>25 µl</td>
+</tr>
+<tr class="odd">
+<td>50x annealing buffer (0.5 M Tris pH 8.0, 2.5 M NaCl)</td>
+<td>1 µl</td>
+</tr>
+</tbody>
+</table>
+<h4 id="annealing-program">Annealing Program</h4>
+<ul>
+<li>95°C for 5 min</li>
+<li>Ramp down to 14°C at −0.1°C/s (slow cool for proper duplex
+formation)</li>
+</ul>
+<blockquote>
+<p><strong>Storage:</strong> Aliquot annealed adapters into 2 µl
+single-use stocks and store at −20°C. Use a fresh aliquot for each
+experiment.</p>
+</blockquote>
+<h3 id="b.-pa-tn5-dilution-transposon-assembly">B. PA-Tn5 Dilution &amp;
+Transposon Assembly</h3>
+<h4 id="pa-tn5-dilution">PA-Tn5 Dilution</h4>
+<p>Dilute PA-Tn5 to <strong>0.5 mg/ml</strong> using dilution
+buffer:</p>
+<p><strong>Dilution buffer:</strong> 50% glycerol, 10 mM Tris-HCl pH
+7.5, 100 mM NaCl, 0.1 mM EDTA, 1 mM DTT</p>
+<hr />
+<h2 id="day-1-protocol-steps">Day 1 — Protocol Steps</h2>
+<h3 id="step-0-load-the-pa-tn5">Step 0: Load the PA-Tn5</h3>
+<blockquote>
+<p><strong>Rationale:</strong> I found freshly loaded Transposome works
+the best (highest activity and more stable)</p>
+</blockquote>
+<p><strong>Transposome assembly:</strong></p>
+<ol type="1">
+<li>Mix 10 µl of 0.5 mg/ml PA-Tn5 with 2 µl of annealed adapter aliquot
+(one per adapter).</li>
+<li>Incubate at RT for 1 hr.</li>
+</ol>
+<h3 id="step-1-formaldehyde-tissue-fixation">Step 1: Formaldehyde Tissue
+Fixation</h3>
+<blockquote>
+<p><strong>Rationale:</strong> Light formaldehyde fixation preserves
+tissue morphology and protein–chromatin interactions while maintaining
+antibody/enzyme accessibility in subsequent steps.</p>
+</blockquote>
+<p><strong>Before experiment:</strong></p>
+<ol type="a">
+<li>Prepare <strong>0.2% formaldehyde</strong> (methanol-free, Sigma
+F8775-25ML) in PBS.<br />
+</li>
+<li>Set thermomixer to <strong>37°C</strong> and allow to equilibrate
+for 5 min.</li>
+</ol>
+<p><strong>Tissue fixation:</strong></p>
+<ol type="1">
+<li>Section tissue onto the capture area of a Superfrost™ Plus
+Microscope Slides (22-037-246, Fisher, draw capture areas at the back of
+slides according to the cassete you are going to use) at a thickness of
+<strong>10 µm</strong>.</li>
+<li>Place the slide (tissue surface up) on the thermomixer. Incubate for
+5 min at 37°C.</li>
+<li>Remove the slide; wipe excess liquid from the back without touching
+tissue sections.</li>
+<li>Apply <strong>1 ml of 0.2% formaldehyde</strong> in 1xPBS to cover
+the tissue. Incubate at RT for 10 min.</li>
+<li>Wash with <strong>1 ml of 1X PBS + 1.25 M glycine</strong> to quench
+residual formaldehyde, then remove.</li>
+<li>Quickly wash with <strong>1 ml of 1X PBS</strong> for ~2 min at
+RT.</li>
+</ol>
+<hr />
+<h3 id="step-2-permeabilization">Step 2: Permeabilization</h3>
+<ol type="1">
+<li>Prepare <strong>1x BD Perm buffer</strong> on ice.</li>
+<li>Apply <strong>70 µl</strong> 1x BD Perm buffer to each well.</li>
+<li>Incubate for <strong>30 min at 4°C</strong> (in referigerater).</li>
+</ol>
+<hr />
+<h3 id="step-3-primary-antibody-staining">Step 3: Primary Antibody
+Staining</h3>
+<ol type="1">
+<li>After removing BD Perm buffer, apply <strong>70 µl</strong> primary
+antibody diluted in 1X BD Perm buffer.</li>
+<li>Incubate at <strong>RT for 1 hr</strong>.</li>
+<li>Wash with <strong>100 µl 1x PBS</strong> for 5 min at RT.</li>
+</ol>
+<blockquote>
+<p><strong>Note:</strong> Dilution factor should be benchmarked by
+immunostaining and a pilot experiment.</p>
+</blockquote>
+<hr />
+<h3 id="step-4-secondary-antibody-staining">Step 4: Secondary Antibody
+Staining</h3>
+<blockquote>
+<p><strong>Rationale:</strong> The secondary antibody bridges the
+primary antibody to PA-Tn5, enabling targeted tagmentation at chromatin
+loci of interest.</p>
+</blockquote>
+<ol type="1">
+<li>Add secondary antibody in <strong>digi-CT wash buffer</strong> at
+<strong>1:50 dilution</strong>, 70 µl/well. Incubate at RT for 30
+min.</li>
+<li>Wash with <strong>100 µl digi-CT wash buffer</strong> for 5 min at
+RT.</li>
+</ol>
+<hr />
+<h3 id="step-5-tagmentation">Step 5: Tagmentation</h3>
+<blockquote>
+<p><strong>Rationale:</strong> PA-Tn5 loaded with sequencing adapters
+inserts adapters at antibody-bound chromatin sites. Higher salt during
+binding reduces non-specific insertion; MgCl₂ activates Tn5 during
+tagmentation.</p>
+</blockquote>
+<ol type="1">
+<li>Add loaded PA-Tn5 in <strong>70 µl digi-300-wash buffer</strong>
+(1:50 dilution). Incubate for <strong>1 hr at RT</strong>.</li>
+<li>Wash with <strong>digi-300-wash buffer</strong> for 5 min at
+RT.</li>
+<li>Add <strong>tagmentation buffer</strong> (10 mM MgCl₂ in
+digi-300-wash buffer).</li>
+<li>Incubate at <strong>55°C for 1 hr</strong> (no shake).</li>
+</ol>
+<blockquote>
+<p><strong>Recommended:</strong> Start ramping down temperature at 55
+min from 55°C → 37°C before stopping, optionally additionally 5min for
+the temperature to ramp down fully.</p>
+</blockquote>
+<hr />
+<h3 id="step-6-tissue-clearing">Step 6: Tissue Clearing</h3>
+<blockquote>
+<p><strong>Rationale:</strong> HCl treatment removes histones and bound
+Tn5, improving accessibility for Gap Filling reaction and <em>in
+vitro</em> transcription.</p>
+</blockquote>
+<ol type="1">
+<li>Remove the Tagmentation Reaction.</li>
+<li>Add <strong>70 µl of 0.1 M HCl</strong> (accurately diluted from
+stock) to each well.</li>
+<li>Incubate for <strong>2 min at RT</strong>.</li>
+<li>Remove HCl.</li>
+<li>Add <strong>100 µl of 1X NEB buffer 2</strong> and incubate for 5
+min at RT.</li>
+</ol>
+<blockquote>
+<p><strong>note:</strong> the 2min clearing here is optimized for mouse
+brain tissue, for other tissue types, this time might needs
+optimization.</p>
+</blockquote>
+<hr />
+<h3 id="step-7-gap-filling">Step 7: Gap Filling</h3>
+<blockquote>
+<p><strong>Rationale:</strong> Tagmentation creates nicked DNA ends. Gap
+filling repairs these nicks, enabling downstream in vitro transcription
+for signal amplification.</p>
+</blockquote>
+<p><strong>Gap-Fill Solution (70 µl/well):</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>H₂O</td>
+<td>56.8 µl</td>
+</tr>
+<tr class="even">
+<td>10x NEB buffer 2</td>
+<td>7 µl</td>
+</tr>
+<tr class="odd">
+<td>dNTPs</td>
+<td>3.5 µl</td>
+</tr>
+<tr class="even">
+<td>RNase Inhibitor (RNAseout)</td>
+<td>0.7 µl</td>
+</tr>
+<tr class="odd">
+<td>Klenow (exo⁻)</td>
+<td>2 µl</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Remove buffer; add 70 µl fill-in solution. Incubate at <strong>37°C
+for 30 min</strong> without shaking.</li>
+<li>Add <strong>100 µl of 1X T7 buffer</strong> and incubate for 5 min
+at RT.</li>
+</ol>
+<blockquote>
+<p>A Thermotop is recommended for even temperature distribution.</p>
+</blockquote>
+<hr />
+<h3 id="step-8-in-vitro-transcription">Step 8: <em>In Vitro</em>
+Transcription</h3>
+<blockquote>
+<p><strong>Rationale:</strong> T7 RNA polymerase transcribes from the
+inserted T7 promoter, generating multiple RNA copies per tagmentation
+event — a key amplification step that increases sensitivity.</p>
+</blockquote>
+<p><strong>IVT Solution (70 µl/well):</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>nuclease-free water</td>
+<td>35.0</td>
+</tr>
+<tr class="even">
+<td>5× Thermo EP0111 buffer (COMMERCIAL)</td>
+<td>14.0</td>
+</tr>
+<tr class="odd">
+<td>25 mM-each rNTP (NEB N0466)</td>
+<td>11.2</td>
+</tr>
+<tr class="even">
+<td>200 mM MgCl₂ working stock</td>
+<td>5.6</td>
+</tr>
+<tr class="odd">
+<td>RNase inhibitor</td>
+<td>3.5</td>
+</tr>
+<tr class="even">
+<td>T7 (Thermo EP0111), 1%</td>
+<td>0.7</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Remove T7 buffer and apply <strong>70 µl IVT solution</strong> to
+each well.</li>
+<li>Seal wells with film and incubate in thermomixer at <strong>37°C
+overnight</strong> (14–16 hrs).</li>
+</ol>
+<blockquote>
+<p>A thermotop is recommended to maintain temperature uniformity.</p>
+</blockquote>
+<hr />
+<h2 id="day-2">Day 2</h2>
+<blockquote>
+<p><strong>Workflow change vs regular Visium.</strong> In SPACE-Tag on
+regular Visium the tissue sits directly on the barcoded slide, so RT is
+performed in the same wells used for tagmentation and IVT. On Visium-HD
+the tissue slide and the barcoded slide are separate: IVT-generated RNA
+is transferred from the tissue slide onto the Visium HD Slide on the
+Visium CytAssist instrument, and all downstream enzymology happens on
+the HD slide. Steps 9 and 10 follow the <em>Visium HD 3’ Fresh Frozen
+Tissue Preparation Handbook</em> (10x Genomics <strong>CG000804 Rev
+A</strong>) and Steps 11 to 15 follow the <em>Visium HD 3’ Spatial Gene
+Expression User Guide</em> (10x Genomics <strong>CG000805 Rev
+B</strong>); page numbers are cited per step. The H&amp;E workflow
+itself changed between regular Visium and Visium-HD, so the fixative,
+the Enhancer step, the eosin format, and the coverslipping requirement
+all differ from the regular-Visium SPACE-Tag protocol.</p>
+</blockquote>
+<blockquote>
+<p><strong>Timing.</strong> The Visium HD Slide wash (Step 11) takes ~60
+min and <strong>must not sit in Pre-equilibration Mix for more than 60
+min</strong> before the CytAssist run. Start the slide-mailer thaw (30
+min to 3 h at RT) before H&amp;E staining, and run the wash while the
+tissue slide is being imaged.</p>
+</blockquote>
+<hr />
+<h3 id="step-9-fixation-enhancer-treatment-tissue-slide">Step 9:
+Fixation &amp; Enhancer Treatment (tissue slide)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> Methanol/acetone fixation immobilises
+IVT-generated RNA on the tissue slide before staining. The post-fixation
+and post-Enhancer washes carry Reducing Agent B and RNase Inhibitor B to
+protect the RNA through the aqueous staining steps. Source: CG000804 Rev
+A, 2.3 Reagent Preparation and 2.5 Fixation, pp. 38–46.</p>
+</blockquote>
+<blockquote>
+<p><strong>This replaces the regular-Visium methanol/isopropanol
+fixation.</strong> 10x changed the H&amp;E workflow between regular
+Visium and Visium-HD: the fixative, the Enhancer step, the eosin format,
+and the requirement to coverslip are all different. Substituting the
+regular-Visium H&amp;E here is explicitly warned against in CG000804 Rev
+A, p. 53.</p>
+</blockquote>
+<ol type="1">
+<li><strong>Reagent preparation (before starting; buffers fresh; volumes
+are for up to two tissue slides transferred to one VisiumHD
+slide):</strong></li>
+</ol>
+<p>Clean the workspace, pipettes, and gloves with RNase decontamination
+solution followed by 70% ethanol. Pre-heat one temperature-controlled
+instrument to <strong>37°C</strong> and one to
+<strong>65°C</strong>.</p>
+<ol type="a">
+<li><em>Fixation Solution</em> (invert gently to mix; may be made up to
+24 h ahead and stored at −20°C):</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Stock</th>
+<th>Final</th>
+<th>Total (ml)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Methanol</td>
+<td>100%</td>
+<td>50%</td>
+<td>5.0</td>
+</tr>
+<tr class="even">
+<td>Acetone</td>
+<td>100%</td>
+<td>50%</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>10.0</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Dispense the 10 ml into a slide mailer labelled <strong>Fixation
+Solution Mailer</strong> and move it to <strong>−20°C</strong>. Do not
+take it out until immediately before use.</p>
+<ol start="2" type="a">
+<li><p><em>Water beakers.</em> Clean <strong>seven 1 L beakers</strong>
+(RNase decontamination solution 10 sec to 1 min → 70% isopropanol or
+ethanol → Milli-Q rinse) and dispense <strong>800 ml Milli-Q
+water</strong> into each. Beakers 1 to 6 are used in Step 10; keep
+beaker 7 for coverslip removal in Step 12.</p></li>
+<li><p><em>Alcoholic Eosin.</em> Dispense <strong>10 ml undiluted
+alcoholic Eosin</strong> into a slide mailer, one mailer per
+slide.</p></li>
+<li><p><em>1X PBS</em> (two 50 ml tubes, 100 ml total, at RT):</p></li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Stock</th>
+<th>Final</th>
+<th>Total (ml)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>—</td>
+<td>45.0</td>
+</tr>
+<tr class="even">
+<td>PBS</td>
+<td>10X</td>
+<td>1X</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>50.0</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Fill two 2 ml tubes with 1X PBS and warm at <strong>37°C for 10
+min</strong>; hold at 37°C for the Enhancer Mix.</p>
+<ol start="5" type="a">
+<li><em>Mounting Medium</em> (2 ml tube, add in the order listed; use a
+wide-bore tip for glycerol; vortex, then centrifuge until no bubbles
+remain). For Reducing Agent B, make an intermediate dilution rather than
+pipetting 0.2 µl (for example 2 µl of a 1:10 dilution):</li>
+</ol>
+<table style="width:100%;">
+<colgroup>
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+<col style="width: 16%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>Stock</th>
+<th>Final</th>
+<th>1 Slide (µl)</th>
+<th>2 Slides + 10% (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Glycerol</td>
+<td>—</td>
+<td>100%</td>
+<td>85%</td>
+<td>85.0</td>
+<td>187.0</td>
+</tr>
+<tr class="even">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>—</td>
+<td>—</td>
+<td>0.2</td>
+<td>0.4</td>
+</tr>
+<tr class="odd">
+<td>RNase Inhibitor B</td>
+<td>2001400</td>
+<td>—</td>
+<td>—</td>
+<td>10.0</td>
+<td>22.0</td>
+</tr>
+<tr class="even">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>4.8</td>
+<td>10.6</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td></td>
+<td><strong>100.0</strong></td>
+<td><strong>220.0</strong></td>
+</tr>
+</tbody>
+</table>
+<ol start="6" type="a">
+<li><em>Post Fixation Wash</em> (15 ml tube, add in the order listed,
+vortex, hold at RT). <strong>Label as Tube 1:</strong></li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>1 Slide (µl)</th>
+<th>2 Slides + 5% (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1X PBS</td>
+<td>—</td>
+<td>1,320</td>
+<td>2,772</td>
+</tr>
+<tr class="even">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>30</td>
+<td>63</td>
+</tr>
+<tr class="odd">
+<td>RNase Inhibitor B</td>
+<td>2001400</td>
+<td>150</td>
+<td>315</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>1,500</strong></td>
+<td><strong>3,150</strong></td>
+</tr>
+</tbody>
+</table>
+<ol start="7" type="a">
+<li><em>Post Enhancer Wash</em> (15 ml tube, add in the order listed,
+vortex, hold at RT). <strong>Label as Tube 3</strong> (Tube 2 is
+prepared during the protocol):</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>1 Slide (µl)</th>
+<th>2 Slides + 5% (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>1X PBS</td>
+<td>—</td>
+<td>1,796.0</td>
+<td>3,771.6</td>
+</tr>
+<tr class="even">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>4.0</td>
+<td>8.4</td>
+</tr>
+<tr class="odd">
+<td>RNase Inhibitor B</td>
+<td>2001400</td>
+<td>200.0</td>
+<td>420.0</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>2,000.0</strong></td>
+<td><strong>4,200.0</strong></td>
+</tr>
+</tbody>
+</table>
+<ol start="8" type="a">
+<li><em>Enhancer</em> (<strong>PN-2000482</strong>, Kit A 1000854).
+Place on ice, then reconstitute at <strong>65°C for 10 min</strong>, or
+until the solution is a dark green with no visible particulates.
+<strong>DO NOT exceed 20 min.</strong></li>
+</ol>
+<ul>
+<li><em>First thaw:</em> vortex briefly and aliquot into four 1.5 ml
+tubes at <strong>430 µl</strong> each. Hold the aliquot in use at RT,
+inverting gently every 10 min; move the rest to ice, then store at
+−20°C.</li>
+<li><em>Frozen aliquot:</em> 65°C for 10 min as above, then hold at RT,
+inverting gently every 10 min.</li>
+<li><strong>DO NOT exceed 2 freeze-thaw cycles per
+aliquot.</strong></li>
+</ul>
+<p>Obtain a <strong>25 ml reagent reservoir</strong>; the same reservoir
+is used throughout. Retrieve the Fixation Solution Mailer from −20°C and
+keep it on ice.</p>
+<p><strong>Fixation:</strong></p>
+<blockquote>
+<p>Pipette at least <strong>1 cm from the tissue edge</strong> and do
+not pipette at an angle, so the tissue is not disturbed.</p>
+</blockquote>
+<ol type="1">
+<li>Remove the IVT solution and disassemble the gasket/cassette from the
+tissue slide.</li>
+<li>Gently immerse the slide in the Fixation Solution Mailer on ice.
+Incubate <strong>1 min</strong>.</li>
+<li>Remove the slide, flick, and wipe excess fixative from the back with
+a lint-free wipe. <strong>DO NOT touch the tissue
+sections.</strong></li>
+<li>Place the slide tissue-side up over the reagent reservoir and air
+dry <strong>1 min</strong>. No more than two slides per reservoir.</li>
+<li>Add <strong>750 µl Tube 1 (Post Fixation Wash)</strong> to each
+tissue section, then a further <strong>750 µl</strong>, for <strong>1.5
+ml total per section</strong>.</li>
+<li>Incubate <strong>10 min at RT</strong>.</li>
+<li>During the incubation, prepare <strong>Tube 2 (Enhancer
+Mix)</strong> in a 15 ml tube. Vortex. Hold at
+<strong>37°C</strong>:</li>
+</ol>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>1 Slide (µl)</th>
+<th>2 Slides + 5% (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pre-warmed 1X PBS</td>
+<td>—</td>
+<td>1,800</td>
+<td>3,780</td>
+</tr>
+<tr class="even">
+<td>Enhancer</td>
+<td>2000482</td>
+<td>200</td>
+<td>420</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>2,000</strong></td>
+<td><strong>4,200</strong></td>
+</tr>
+</tbody>
+</table>
+<ol start="8" type="1">
+<li>Remove the Post Fixation Wash by tilting the slide over the
+reservoir. Do not let the slide touch liquid already in the
+reservoir.</li>
+<li>Place the slide tissue-side up over the reservoir. <strong>DO NOT
+allow the slide to dry</strong> at any point from here to coverslip
+mounting.</li>
+<li>Add <strong>1 ml Tube 2 (Enhancer Mix)</strong> to cover the
+sections uniformly, then <strong>immediately</strong> remove it by
+tilting.</li>
+<li>Add a second <strong>1 ml Tube 2 (Enhancer Mix)</strong>. Incubate
+<strong>1 min at RT</strong>, then remove by tilting.</li>
+<li>Add <strong>1 ml Tube 3 (Post Enhancer Wash)</strong> to cover the
+sections uniformly, then <strong>immediately</strong> remove it by
+tilting.</li>
+<li>Add a second <strong>1 ml Tube 3 (Post Enhancer Wash)</strong>.
+Incubate <strong>1 min at RT</strong>, then remove by tilting.</li>
+<li>Proceed immediately to Step 10.</li>
+</ol>
+<blockquote>
+<p><strong>SPACE-Tag notes (untested).</strong> Two points in this step
+have not been benchmarked on SPACE-Tag material. First, the handbook’s
+<strong>1 min</strong> fixation is set for an unfixed cryosection, where
+methanol/acetone both fixes and permeabilises; here the tissue is
+already formaldehyde-fixed and the only job of this step is to hold free
+IVT RNA in place, which the previous protocol did with 30 min of
+methanol at −20°C. Second, the Enhancer is a proprietary reagent
+developed for the HD 3’ mRNA assay and its effect on IVT RNA retention
+is unknown. If capture is low, test a lengthened fixation and an
+Enhancer-omitted arm as paired sections on the same slide, read out as
+unique fragments per bin.</p>
+</blockquote>
+<hr />
+<h3 id="step-10-he-staining-coverslip-mounting-imaging-tissue-slide">Step
+10: H&amp;E Staining, Coverslip Mounting &amp; Imaging (tissue
+slide)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> H&amp;E staining provides the histology
+image that Space Ranger aligns to the CytAssist image. Coverslipping in
+the RNase-protected glycerol Mounting Medium is required by the HD
+workflow: the CytAssist run in Step 13 begins from a coverslipped,
+mounted slide. Source: CG000804 Rev A, 2.6 H&amp;E Staining, 2.7
+Coverslip Mounting, 2.8 Imaging, pp. 47–50.</p>
+</blockquote>
+<blockquote>
+<p>Pipette at least <strong>1 cm from the tissue edge</strong> and do
+not pipette at an angle. <strong>Work quickly.</strong> Slow progress
+through these steps causes RNA degradation.</p>
+</blockquote>
+<p><strong>Staining:</strong></p>
+<ol type="1">
+<li>Place the slide tissue-side up over the reagent reservoir. No more
+than two slides per reservoir.</li>
+<li>Add <strong>1 ml Hematoxylin</strong> (Gill II) per slide to cover
+all sections uniformly. Incubate <strong>1 min at RT</strong>.</li>
+<li>Discard by holding the slide at an angle over the reservoir.</li>
+<li>Immerse <strong>5×</strong> in Water Beaker 1, <strong>15×</strong>
+in Beaker 2, <strong>15×</strong> in Beaker 3.</li>
+<li>Wipe excess liquid from the back of the slide with a lint-free wipe,
+without touching the sections.</li>
+<li>Place the slide tissue-side up over the reservoir. Add <strong>1 ml
+Bluing Buffer</strong> per slide. Incubate <strong>1 min at RT</strong>,
+then discard at an angle.</li>
+<li>Immerse <strong>10×</strong> in Water Beaker 4. Wipe the back of the
+slide.</li>
+<li>Gently immerse the slide in the <strong>undiluted alcoholic
+Eosin</strong> mailer, one mailer per slide. Incubate <strong>30 sec at
+RT</strong>.</li>
+</ol>
+<blockquote>
+<p><strong>DO NOT use diluted Eosin.</strong> The regular-Visium eosin
+dilution in Tris-acetic acid buffer does not apply to the HD
+workflow.</p>
+</blockquote>
+<ol start="9" type="1">
+<li>Discard by holding the slide at an angle with its bottom edge
+against a lint-free wipe.</li>
+<li>Immerse for <strong>30 sec</strong> in Water Beaker 5, then
+<strong>10×</strong> in Water Beaker 6. Wipe the back of the slide.</li>
+<li>Proceed immediately to coverslip mounting. <strong>DO NOT air dry
+the slide.</strong></li>
+</ol>
+<p><strong>Coverslip Mounting:</strong></p>
+<ol start="12" type="1">
+<li>Gently touch the long edge of the slide to a lint-free wipe to
+remove excess moisture, including any large droplets.</li>
+<li>Place the slide on a flat, clean, non-absorbent surface. Some
+residual droplets are expected. <strong>DO NOT allow the slide to
+dry.</strong></li>
+<li>Using a <strong>wide-bore tip</strong>, add <strong>100 µl Mounting
+Medium</strong> to cover the entire tissue section.</li>
+</ol>
+<blockquote>
+<p><strong>DO NOT use Cytoseal or nail polish</strong> to secure the
+coverslip. The Mounting Medium must remain removable in water at Step
+12.</p>
+</blockquote>
+<ol start="15" type="1">
+<li>Apply the coverslip slowly, at an angle from one end, without
+introducing bubbles. Let the Mounting Medium spread and settle.</li>
+<li>Wick away any large excess of Mounting Medium from the coverslip
+edge with a lint-free wipe. Do not move the coverslip.</li>
+<li>Proceed immediately to imaging, or lay the slide flat in a slide
+holder in the dark at <strong>4°C for up to 24 h</strong>. Laying flat
+prevents loss of Mounting Medium.</li>
+</ol>
+<p><strong>Imaging:</strong></p>
+<ol start="18" type="1">
+<li>If the slide was stored, remove condensation from the back with a
+lint-free wipe.</li>
+<li>Image the tissue section at the desired magnification using
+brightfield settings (Metafer scope; see also CG000688 for HD imaging
+requirements).</li>
+<li>If using the Visium CytAssist Alignment Aid to annotate the slide,
+do so <strong>while the slide is still coverslipped</strong>, before
+Step 12.</li>
+<li>Lay the slide flat in a slide holder in the dark at
+<strong>4°C</strong> and proceed to Step 11. Slides must stay at 4°C
+until coverslip removal in Step 12, for <strong>up to 72 h</strong>.
+<strong>DO NOT let the coverslip dry out.</strong></li>
+</ol>
+<hr />
+<h3 id="step-11-visium-hd-slide-wash-cytassist-preparation">Step 11:
+Visium HD Slide Wash &amp; CytAssist Preparation</h3>
+<blockquote>
+<p><strong>Rationale:</strong> The Visium HD Slide is thawed, washed
+free of storage buffer, and equilibrated in Pre-equilibration Buffer
+immediately before the CytAssist run. Source: CG000805 Rev B, 1.1 Visium
+HD Slide Wash, pp. 49–54.</p>
+</blockquote>
+<blockquote>
+<p><strong>DO NOT</strong> touch the Visium HD Slide spacer during the
+washes.</p>
+</blockquote>
+<p><strong>a. Thaw.</strong> Remove the Visium HD Slide mailer from
+−80°C and from its mylar bag. <strong>DO NOT uncap.</strong> Keep
+upright and thaw at RT for <strong>30 min to 3 h</strong>. Prepare one
+Visium HD Slide at a time.</p>
+<p><strong>b. 0.1X SSC Buffer</strong> (two 50 ml centrifuge tubes, 80
+ml total; sufficient for the whole protocol):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Stock</th>
+<th>Final</th>
+<th>1 Visium HD Slide + 15%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>—</td>
+<td>39.8 ml</td>
+</tr>
+<tr class="even">
+<td>SSC</td>
+<td>20X</td>
+<td>0.1X</td>
+<td>0.2 ml</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>40.0 ml</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>c. Pre-equilibration Mix</strong> (pipette mix, centrifuge
+briefly, keep at RT):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>1 Visium HD Slide + 10%</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>55 µl</td>
+</tr>
+<tr class="even">
+<td>Pre-equilibration Buffer</td>
+<td>2001399</td>
+<td>55 µl</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>110 µl</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Wash:</strong></p>
+<ol type="1">
+<li>Open the slide mailer. Add <strong>7 ml 0.1X SSC</strong> slowly
+along the side of the mailer on one side of the slide, then <strong>7
+ml</strong> on the other side, so both faces are immersed.</li>
+<li>Incubate at RT for <strong>1 min</strong>. <strong>DO NOT close the
+mailer.</strong> Pour off the SSC while holding the slide in place with
+one finger.</li>
+<li><strong>Three 5-min washes:</strong> repeat the 7 ml + 7 ml
+addition, incubate <strong>5 min at RT</strong>, and pour off. Do this
+three times. During the third wash, keep the SSC in the mailer in case
+the slide needs re-immersion.</li>
+<li>Remove the slide and inspect for debris. If debris is visible,
+briefly re-immerse in the mailer and remove.</li>
+<li>Flick the slide. Dry the back (the side without spacers) with a
+lint-free wipe if needed.</li>
+<li>Gently touch the long edge of the slide to a fresh lint-free wipe
+<strong>5×</strong> to remove excess SSC. Re-inspect; repeat immersion,
+flicking, and wiping if particulate remains.</li>
+<li><strong>Record the Visium HD Slide serial number.</strong></li>
+<li>Place the slide in a new <strong>6.5 mm Visium Cassette</strong>
+(Visium Slide Cassettes S3 kit <strong>1000847</strong>: top
+<strong>2001252</strong> or <strong>3002329</strong>, bottom
+<strong>2001344</strong> or <strong>3002328</strong>; assembly per
+CG000730).</li>
+<li>Add <strong>100 µl 0.1X SSC</strong> to each well, then remove it.
+<strong>Repeat the removal</strong> to ensure no SSC remains.</li>
+<li>Add <strong>50 µl Pre-equilibration Mix</strong> to each well.</li>
+</ol>
+<blockquote>
+<p><strong>DO NOT exceed 60 min</strong> between adding
+Pre-equilibration Mix and starting the CytAssist run.</p>
+</blockquote>
+<ol start="11" type="1">
+<li>Apply a new <strong>Visium Slide Seal</strong>
+(<strong>PN-2000283</strong>) to the cassette.</li>
+<li>Power on the Visium CytAssist (<strong>firmware 2.0.0 or higher
+required</strong>). Press <strong>New Run</strong> and enter the slide
+serial number, run name, and <strong>37°C for 30 min</strong>.</li>
+<li>Enter sample names and positions (<strong>A1 = right side, D1 = left
+side</strong>).</li>
+</ol>
+<hr />
+<h3 id="step-12-destaining-tissue-slide">Step 12: Destaining (tissue
+slide)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> Acid destaining removes hematoxylin so
+that residual stain does not transfer to the Visium HD Slide during the
+CytAssist run. Source: CG000805 Rev B, 2.2 Destaining, pp. 59–60.</p>
+</blockquote>
+<p><strong>Before starting:</strong> dispense <strong>10 ml 0.1 N
+HCl</strong> into a labelled HCl slide mailer and <strong>10 ml 1X
+PBS</strong> into a PBS mailer, both freshly prepared in nuclease-free
+water. Each volume is sufficient for two tissue slides. <strong>DO NOT
+reuse either solution.</strong> A 50 ml centrifuge tube may be
+substituted, holding no more than two slides placed back to back with
+tissue facing outward, provided the tissue is fully submerged.</p>
+<p><strong>Coverslip removal (CG000805 Rev B, 2.1, p. 58).</strong>
+Perform this before destaining.</p>
+<ol type="1">
+<li>Immerse the slide sideways in a clean 1 L beaker holding <strong>800
+ml Milli-Q water</strong> (Water Beaker 7 from Step 9), with the
+coverslipped face fully sideways so the coverslip cannot drag across the
+tissue.</li>
+<li>Hold the slide in the water until the coverslip separates on its
+own.</li>
+</ol>
+<blockquote>
+<p>To avoid tissue damage or detachment, <strong>DO NOT</strong> move
+the slide up and down, shake it, or move the coverslip by hand.</p>
+</blockquote>
+<ol start="3" type="1">
+<li>Gently immerse the slide <strong>30×</strong> in the water to remove
+all Mounting Medium.</li>
+<li>Proceed immediately to destaining. <strong>DO NOT allow the slide to
+dry.</strong></li>
+</ol>
+<p><strong>Destaining:</strong></p>
+<ol type="1">
+<li>Immerse the slide <strong>10×</strong> in the 0.1 N HCl mailer.</li>
+<li>Immerse the slide in the HCl mailer, close the mailer, and incubate
+for <strong>15 min at RT</strong>.</li>
+<li><strong>During the HCl incubation, prepare the Permeabilization
+Mix</strong> (Step 13b). Pipette mix until homogeneous, avoid bubbles,
+keep at RT.</li>
+<li>Immerse the slide <strong>10×</strong> in the 1X PBS mailer.</li>
+<li>Immerse the slide in the PBS mailer and incubate for <strong>5 min
+at RT</strong>.</li>
+<li>Remove the slide and immediately flick to remove excess PBS. Inspect
+for large droplets and repeat flicking if present.</li>
+<li>Once no droplets remain on the tissue surface, remove excess PBS
+outside the tissue with a lint-free wipe, without touching the
+sections.</li>
+<li>Gently tap the back of the slide onto a fresh lint-free wipe.</li>
+<li>Place the slide tissue-side up on a lint-free wipe on a flat, clean
+surface and <strong>proceed immediately to Step 13</strong>.</li>
+</ol>
+<hr />
+<h3 id="step-13-cytassist-enabled-rna-transfer">Step 13:
+CytAssist-Enabled RNA Transfer</h3>
+<blockquote>
+<p><strong>Rationale:</strong> The tissue slide and the Visium HD Slide
+are brought into contact on the CytAssist. IVT RNA released from the
+tissue is captured by the poly(dT) oligos on the 2 µm barcoded squares
+of the HD Capture Area. Source: CG000805 Rev B, 3.1 CytAssist-Enabled
+Poly(A) RNA Capture, pp. 64–72.</p>
+</blockquote>
+<p><strong>a. Visium HD Slide steps</strong></p>
+<ol type="1">
+<li>Retrieve the Visium Cassette. Remove the Visium Slide Seal and
+remove the Pre-equilibration Mix: hold the cassette at
+<strong>45°</strong>, tilted right so buffer pools in the lower right
+corner of the well; with a P200 set to 200 µl, place the tip in the
+bottom right corner without scratching the fiducial frame or hydrogel,
+and aspirate. Repeat with a fresh tip, then do the same for the other
+well.</li>
+</ol>
+<blockquote>
+<p>Failure to remove the Pre-equilibration Mix completely delays slide
+drying and reduces assay performance.</p>
+</blockquote>
+<ol start="2" type="1">
+<li>Remove the top half of the cassette, leaving the slide in the bottom
+half. Rest the top half gasket-side up to keep it free of debris.</li>
+<li>Remove the Visium HD Slide from the cassette without touching the
+active surface. Dry the back with a lint-free wipe if needed. <strong>DO
+NOT flick the slide.</strong> Save the cassette for reuse after the
+run.</li>
+<li>Load the slide against the grooves of the Visium Slide Stage and
+close the Visium Slide Lock.</li>
+<li>Allow the slide to <strong>dry on the stage for 10 min</strong>.
+Inspect the entire spacer chamber from several angles; if any liquid
+remains, continue drying and proceed the moment the chamber is dry.</li>
+</ol>
+<p><strong>b. Permeabilization Mix</strong> (prepared during the HCl
+incubation in Step 12):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>2 Tissue Slides (µl, incl. overage)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>10.4</td>
+</tr>
+<tr class="even">
+<td>Perm Buffer</td>
+<td>2001398</td>
+<td>20.0</td>
+</tr>
+<tr class="odd">
+<td><em>(added immediately before the run:)</em></td>
+<td></td>
+<td></td>
+</tr>
+<tr class="even">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>1.6</td>
+</tr>
+<tr class="odd">
+<td>Perm Enzyme B</td>
+<td>3000553</td>
+<td>8.0</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>40.0</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>c. Tissue slide loading</strong></p>
+<ol start="6" type="1">
+<li>Gently tap the back of the tissue slide onto a lint-free wipe. If
+Alignment Aid marks were drawn, tap rather than wipe so the marks are
+not removed.</li>
+<li>Load the tissue slide into the CytAssist, keeping the frosted area
+outside the dashed zone on the tissue slide stage. <strong>Both the
+tissue slide and the Visium HD Slide must be completely dry</strong>
+before the run; examine from multiple angles.</li>
+</ol>
+<p><strong>d. Reagent addition and run</strong></p>
+<ol start="8" type="1">
+<li>Pipette mix Perm Enzyme B (<strong>PN-3000553</strong>) and vortex
+Reducing Agent B (<strong>PN-2000087</strong>); centrifuge both briefly.
+Add <strong>1.6 µl Reducing Agent B</strong> and <strong>8 µl Perm
+Enzyme B</strong> to the 30.4 µl Permeabilization Mix. Pipette mix 15×
+with the pipette set to 30 µl, avoiding bubbles. Centrifuge 5 sec.</li>
+</ol>
+<blockquote>
+<p>Start the run <strong>within 5 min</strong> of adding Perm Enzyme B
+and Reducing Agent B.</p>
+</blockquote>
+<ol start="9" type="1">
+<li>Slowly aspirate <strong>17 µl</strong> of completed Permeabilization
+Mix and check the tip for bubbles. Slowly dispense <strong>17
+µl</strong> into the centre of each spacer well on the Visium HD Slide,
+using a fresh tip per dispense. Do not push the plunger past the first
+stop.</li>
+<li>Close the lid, press <strong>Next</strong>, then press
+<strong>play</strong>. Run at <strong>37°C for 30 min</strong>.</li>
+<li>At the end of the run, press <strong>Done</strong> and open the lid.
+<strong>DO NOT</strong> leave the sample in the instrument. <strong>DO
+NOT</strong> power off the instrument yet. It is normal for stain or
+tissue to remain on the tissue slide.</li>
+<li>Immediately remove the Visium HD Slide.</li>
+</ol>
+<p><strong>e. Five 0.1X SSC rinses</strong> (perform next to the
+instrument so the Capture Areas are washed promptly)</p>
+<ol start="13" type="1">
+<li>Holding the slide over a liquid waste container, rinse each Capture
+Area with <strong>1 ml 0.1X SSC</strong>. <strong>DO NOT pipette
+directly onto the Capture Areas.</strong> Repeat for a total of
+<strong>five rinses</strong>. If pink stain remains, continue rinsing
+until it is gone.</li>
+<li>Gently touch the long edge of the slide to a lint-free wipe
+<strong>3–5×</strong> to remove excess SSC. <strong>DO NOT touch the
+Capture Area.</strong></li>
+<li>Place the Visium HD Slide back into the same Visium Cassette. Some
+residual moisture is normal.</li>
+<li>Proceed immediately to Step 14.</li>
+</ol>
+<hr />
+<h3 id="step-14-reverse-transcription-visium-hd-slide">Step 14: Reverse
+Transcription (Visium HD Slide)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> Two sequential RT reactions convert the
+captured IVT RNA into spatially barcoded cDNA on the HD slide. RT1 at
+53°C favours read-through on structured template; RT2 at 42°C with a
+higher enzyme load extends conversion. Source: CG000805 Rev B, 3.2
+Reverse Transcription, pp. 69–74. RT Enzyme G is the Visium-HD enzyme
+and is <strong>not</strong> interchangeable with RT Enzyme D
+(2000216/2000227) used in the regular-Visium CytAssist workflow.</p>
+</blockquote>
+<p><strong>Reagent handling.</strong> Thaw RT Reagent
+(<strong>PN-2000086</strong>) at RT, vortex, then move to ice. Keep RT
+Enzyme G (<strong>PN-2001438</strong>) on ice. Resuspend Template Switch
+Oligo B (<strong>PN-2001027</strong>) in <strong>65 µl Low TE
+Buffer</strong>, vortex 15 sec at maximum speed, and centrifuge briefly;
+store resuspended stock at −80°C and thaw on ice for ≥30 min on
+subsequent uses.</p>
+<p><strong>a. Program the thermal cycler</strong> with a Low Profile
+Thermocycler Adapter (PN-3000823) in place and start it so it holds at
+temperature:</p>
+<table>
+<thead>
+<tr class="header">
+<th></th>
+<th>Lid</th>
+<th>Reaction volume</th>
+<th>Run time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td><strong>Reverse Transcription 1</strong></td>
+<td>53°C</td>
+<td>100 µl</td>
+<td>48 min</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Temperature</th>
+<th>Time</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Pre-equilibrate</td>
+<td>53°C</td>
+<td>Hold</td>
+</tr>
+<tr class="even">
+<td>Reverse Transcription 1</td>
+<td>53°C</td>
+<td>00:45:00</td>
+</tr>
+<tr class="odd">
+<td>Cool</td>
+<td>4°C</td>
+<td>00:03:00</td>
+</tr>
+<tr class="even">
+<td>Hold</td>
+<td>4°C</td>
+<td>Hold</td>
+</tr>
+</tbody>
+</table>
+<p><strong>b. RT Master Mix </strong> (prepare on ice, add reagents in
+the order listed, pipette mix 10×, centrifuge briefly, keep on ice):</p>
+<table>
+<colgroup>
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+<col style="width: 25%" />
+</colgroup>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>10x PN</th>
+<th>1X (µl)</th>
+<th>1 Visium HD Slide (µl, two reactions + overage)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>40.2</td>
+<td>88.4</td>
+</tr>
+<tr class="even">
+<td>RT Reagent</td>
+<td>2000086</td>
+<td>17.5</td>
+<td>38.5</td>
+</tr>
+<tr class="odd">
+<td>Reducing Agent B</td>
+<td>2000087</td>
+<td>1.4</td>
+<td>3.1</td>
+</tr>
+<tr class="even">
+<td>RT Enzyme G</td>
+<td>2001438</td>
+<td>10.9</td>
+<td>24.0</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td><strong>70.0</strong></td>
+<td><strong>154.0</strong></td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Remove any residual 0.1X SSC from the wells.</li>
+<li>Add <strong>70 µl RT Master Mix </strong> to each well.</li>
+<li>Apply a new Visium Slide Seal, place the cassette on the Low Profile
+Thermocycler Adapter on the pre-heated cycler, and close the lid.</li>
+<li>Skip the Pre-equilibrate step to start <strong>Reverse
+Transcription</strong>.</li>
+</ol>
+<hr />
+<h3 id="step-15-denaturation-post-rt">Step 15: Denaturation
+(post-RT)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> KOH denaturation removes the RNA
+template, leaving single-stranded cDNA for second strand synthesis.
+Source: CG000805 Rev B, 3.3 Denaturation, p. 74.</p>
+</blockquote>
+<p><strong>0.08 M KOH</strong> (prepare shortly before use, add reagents
+in the order listed, vortex, centrifuge briefly, keep at RT, discard
+after use):</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Stock</th>
+<th>Final</th>
+<th>2X + overage (µl)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Nuclease-free water</td>
+<td>—</td>
+<td>—</td>
+<td>495.0</td>
+</tr>
+<tr class="even">
+<td>KOH</td>
+<td>8 M</td>
+<td>0.08 M</td>
+<td>5.0</td>
+</tr>
+<tr class="odd">
+<td><strong>Total</strong></td>
+<td></td>
+<td></td>
+<td><strong>500.0</strong></td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>At the end of Reverse Transcription 2, remove the cassette from the
+Low Profile Thermocycler Adapter onto a flat, clean surface.</li>
+<li>Remove the Visium Slide Seal and pipette out all RT2 mix.</li>
+<li>Add <strong>75 µl 0.08 M KOH</strong> to each well.</li>
+<li>Incubate for <strong>5 min at RT</strong>.</li>
+<li>Remove the KOH.</li>
+<li>Add <strong>100 µl Buffer EB</strong> (10 mM Tris-Cl, pH 8.5) to
+each well.</li>
+</ol>
+<hr />
+<h3 id="step-16-second-strand-synthesis">Step 16: Second Strand
+Synthesis</h3>
+<blockquote>
+<p><strong>Rationale:</strong> A primer is annealed to the
+single-stranded cDNA; Klenow polymerase extends it to generate dsDNA
+suitable for PCR amplification.</p>
+</blockquote>
+<p><strong>Primer Annealing:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>2x primer hybridization buffer</td>
+<td>35 µl</td>
+</tr>
+<tr class="even">
+<td>Primer (1 µM)</td>
+<td>1.4 µl</td>
+</tr>
+<tr class="odd">
+<td>H₂O</td>
+<td>33.6 µl</td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Add 70 µl of primer annealing mix to each well; incubate at
+<strong>RT for 30 min</strong>.</li>
+<li>Wash with Buffer EB: pipette 100 µl into each well and immediately
+remove.</li>
+</ol>
+<p><strong>Klenow Extension:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5x Maxima Buffer</td>
+<td>14 µl</td>
+</tr>
+<tr class="even">
+<td>Water (RNase/DNase-free)</td>
+<td>40.25 µl</td>
+</tr>
+<tr class="odd">
+<td>dNTP mix (10 mM each)</td>
+<td>7 µl</td>
+</tr>
+<tr class="even">
+<td>DNA primer (10 µM)</td>
+<td>7 µl</td>
+</tr>
+<tr class="odd">
+<td>Klenow (200 U/µl)</td>
+<td>1.75 µl</td>
+</tr>
+<tr class="even">
+<td><strong>Total</strong></td>
+<td><strong>70 µl</strong></td>
+</tr>
+</tbody>
+</table>
+<ol type="1">
+<li>Add 70 µl of Klenow mix to each well; avoid bubbles. Cover and
+incubate for <strong>1 hr at 37°C</strong>.</li>
+<li>Remove the Klenow mix.</li>
+</ol>
+<hr />
+<h3 id="step-17-denaturation-post-second-strand">Step 17: Denaturation
+(post-Second Strand)</h3>
+<blockquote>
+<p><strong>Rationale:</strong> A second KOH denaturation releases the
+dsDNA from the slide for collection and downstream library
+preparation.</p>
+</blockquote>
+<ol type="1">
+<li>Remove reagents from the wells.</li>
+<li>Add <strong>100 µl Buffer EB</strong> to each well; remove
+immediately.</li>
+<li>Add <strong>35 µl of 0.08 M KOH</strong> (freshly diluted) to each
+well.</li>
+<li>Incubate for <strong>10 min at RT</strong>.</li>
+<li>Add <strong>5 µl of 1 M Tris (pH 7.0)</strong> to each tube in an
+8-tube strip to pre-neutralize.</li>
+<li>Transfer 35 µl of sample from each well to the corresponding
+Tris-containing tube (±1–2 µl variation expected).</li>
+<li>Vortex briefly, centrifuge, and place on ice.</li>
+</ol>
+<hr />
+<h3 id="step-18-pcr-library-amplification">Step 18: PCR Library
+Amplification</h3>
+<blockquote>
+<p><strong>Rationale:</strong> PCR1 amplifies the cDNA library using
+primers targeting the capture oligo and Nextera adapter sequences. Index
+PCR adds sample-specific barcodes for multiplexed sequencing.</p>
+</blockquote>
+<p><strong>PCR1:</strong></p>
+<p>For Visium slides (e.g. mouse brain, ~70% capture area): ~18 cycles
+recommended.</p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Elution</td>
+<td>40 µl</td>
+</tr>
+<tr class="even">
+<td>cDNA-oligo1 (<code>CTACACGACGCTCTTCCGATCT</code>)</td>
+<td>5 µl</td>
+</tr>
+<tr class="odd">
+<td>PF-nexteraR2-DME
+(<code>GTCTCGTGGGCTCGGAGATGTGTATAAGAGACAG</code>)</td>
+<td>5 µl</td>
+</tr>
+<tr class="even">
+<td>NEBNext</td>
+<td>50 µl</td>
+</tr>
+</tbody>
+</table>
+<p><strong>PCR1 Program:</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Step</th>
+<th>Temp</th>
+<th>Time</th>
+<th>Cycles</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Initial denaturation</td>
+<td>98°C</td>
+<td>3 min</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Denaturation</td>
+<td>98°C</td>
+<td>15 s</td>
+<td>18×</td>
+</tr>
+<tr class="odd">
+<td>Annealing</td>
+<td>60°C</td>
+<td>20 s</td>
+<td>18×</td>
+</tr>
+<tr class="even">
+<td>Extension</td>
+<td>72°C</td>
+<td>1 min</td>
+<td>18×</td>
+</tr>
+<tr class="odd">
+<td>Final extension</td>
+<td>72°C</td>
+<td>1 min</td>
+<td>1</td>
+</tr>
+<tr class="even">
+<td>Hold</td>
+<td>4°C</td>
+<td>∞</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<p>Purify with <strong>1x SPRI</strong>; elute in 50 µl. Use 10 µl for
+index PCR.</p>
+<p><strong>Index PCR (5 cycles):</strong></p>
+<table>
+<thead>
+<tr class="header">
+<th>Reagent</th>
+<th>Volume</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Elution</td>
+<td>10 µl</td>
+</tr>
+<tr class="even">
+<td>SIPCR-T5XXX</td>
+<td>5 µl</td>
+</tr>
+<tr class="odd">
+<td>N7 indexing primer</td>
+<td>5 µl</td>
+</tr>
+<tr class="even">
+<td>H2O</td>
+<td>30 µl</td>
+</tr>
+<tr class="odd">
+<td>NEBNext</td>
+<td>50 µl</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Primer sequences:</strong></p>
+<ul>
+<li>SIPCR-T5XXX:
+<code>AATGATACGGCGACCACCGAGATCTACACNNNNNNNNACACTCTTTCCCTACACGACGCTC</code></li>
+<li>N7 indexing primer:
+<code>CAAGCAGAAGACGGCATACGAGATNNNNNNNNGTCTCGTGGGCTCGG</code></li>
+</ul>
+<p><strong>Final Cleanup:</strong> Run a gel to check product size
+first, we do see variations on products vs primer dimer distributions.
+Perform <strong>1x SPRI purification</strong> twice(target product
+~400bp), for pure product</p>
+</body>
+</html>

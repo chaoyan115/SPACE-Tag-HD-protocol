@@ -1,0 +1,8 @@
+# Local build tooling, deliberately not published.
+Makefile
+BUILD.local.md
+
+# Working backups, never published.
+*.bak
+*.bak_*
+protocol.md.bak*
