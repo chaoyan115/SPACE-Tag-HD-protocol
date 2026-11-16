@@ -39,6 +39,16 @@ reverse transcription happens in the same wells used for tagmentation and IVT. O
 tissue slide and the barcoded slide are separate, and the IVT product is moved between them on the
 CytAssist. The H&E workflow also differs, and 10x warns against substituting one for the other.
 
+## Citation
+
+If you use SPACE-Tag, please cite:
+
+> Yan C., He R., Fernandez S., Pleska M., Maniatis S., Raimondi I., Vickovic S. SPACE-Tag enables
+> high-throughput spatial chromatin profiling with CUT&Tag. *bioRxiv* (2026).
+> [doi:10.64898/2026.11.06.764689](https://doi.org/10.64898/2026.11.06.764689)
+
+The preprint is under peer review, and this protocol may be updated as the paper is revised.
+
 ## Feedback
 
 Corrections, questions, and reports of what did or did not work in your hands are welcome. Open an
