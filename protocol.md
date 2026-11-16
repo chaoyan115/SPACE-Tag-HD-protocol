@@ -103,7 +103,6 @@ the four kits below.
 |---|---|---|
 | RT Reagent | 2000086 | Step 14 |
 | RT Enzyme G | 2001438 | Step 14 |
-| Template Switch Oligo B | 2001027 | Step 14 |
 
 > Kit B also ships Second Strand Enzyme (2000183), Second Strand Reagent (2000219), Second Strand
 > Primer (2000217), cDNA Primers (2000089), Amp Mix (2000103), Fragmentation Enzyme (2000104),
@@ -194,7 +193,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 2. Place the slide (tissue surface up) on the thermomixer. Incubate for 5 min at 37°C.
 3. Remove the slide; wipe excess liquid from the back without touching tissue sections.
 4. Apply **1 ml of 0.2% formaldehyde** in 1xPBS to cover the tissue. Incubate at RT for 10 min.
-5. Wash with **1 ml of 1X PBS + 1.25 M glycine** to quench residual formaldehyde, then remove.
+5. Add **1 ml of 1X PBS + 1.25 M glycine** and incubate for **5 min at RT** to quench residual formaldehyde, then remove.
 6. Quickly wash with **1 ml of 1X PBS** for ~2 min at RT.
 
 ---
@@ -626,29 +625,27 @@ submerged.
 
 ### Step 14: Reverse Transcription (Visium HD Slide)
 
-> **Rationale:** Two sequential RT reactions convert the captured IVT RNA into spatially barcoded
-> cDNA on the HD slide. RT1 at 53°C favours read-through on structured template; RT2 at 42°C with a
-> higher enzyme load extends conversion.
+> **Rationale:** A single RT reaction at 53°C converts the captured IVT RNA into spatially barcoded
+> cDNA on the HD slide. Unlike the 10x gene expression workflow, no template switch oligo and no
+> second RT are used.
 > Source: CG000805 Rev B, 3.2 Reverse Transcription, pp. 69–74.
 > RT Enzyme G is the Visium-HD enzyme and is **not** interchangeable with RT Enzyme D (2000216/2000227)
 > used in the regular-Visium CytAssist workflow.
 
 **Reagent handling.** Thaw RT Reagent (**PN-2000086**) at RT, vortex, then move to ice. Keep RT
-Enzyme G (**PN-2001438**) on ice. Resuspend Template Switch Oligo B (**PN-2001027**) in
-**65 µl Low TE Buffer**, vortex 15 sec at maximum speed, and
-centrifuge briefly; store resuspended stock at −80°C and thaw on ice for ≥30 min on subsequent uses.
+Enzyme G (**PN-2001438**) on ice.
 
 **a. Program the thermal cycler** with a Low Profile Thermocycler Adapter (PN-3000823) in place and start it so it
 holds at temperature:
 
 | | Lid | Reaction volume | Run time |
 |---|---|---|---|
-| **Reverse Transcription 1** | 53°C | 100 µl | 48 min |
+| **Reverse Transcription** | 53°C | 100 µl | 48 min |
 
 | Step | Temperature | Time |
 |---|---|---|
 | Pre-equilibrate | 53°C | Hold |
-| Reverse Transcription 1 | 53°C | 00:45:00 |
+| Reverse Transcription | 53°C | 00:45:00 |
 | Cool | 4°C | 00:03:00 |
 | Hold | 4°C | Hold |
 
@@ -684,8 +681,8 @@ briefly, keep at RT, discard after use):
 | KOH | 8 M | 0.08 M | 5.0 |
 | **Total** | | | **500.0** |
 
-1. At the end of Reverse Transcription 2, remove the cassette from the Low Profile Thermocycler Adapter onto a flat, clean surface.
-2. Remove the Visium Slide Seal and pipette out all RT2 mix.
+1. At the end of Reverse Transcription, remove the cassette from the Low Profile Thermocycler Adapter onto a flat, clean surface.
+2. Remove the Visium Slide Seal and pipette out all RT mix.
 3. Add **75 µl 0.08 M KOH** to each well.
 4. Incubate for **5 min at RT**.
 5. Remove the KOH.
