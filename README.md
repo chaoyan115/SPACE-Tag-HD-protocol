@@ -6,14 +6,29 @@ Antibody-guided protein A-Tn5 tagmentation generates transcribable DNA fragments
 loci. These are amplified by in vitro transcription and transferred to a Visium HD Slide on the
 Visium CytAssist instrument, where they are captured on 2 µm barcoded squares.
 
-**Read the protocol:** [protocol.md](protocol.md). A print-ready Word version is
-[SPACE-Tag-HD-protocol.docx](SPACE-Tag-HD-protocol.docx), and [index.html](index.html) is the
-rendered page.
+**Read the protocol:** [chaoyan115.github.io/SPACE-Tag-HD-protocol](https://chaoyan115.github.io/SPACE-Tag-HD-protocol/).
+The source is [protocol.md](protocol.md), and a print-ready Word version is
+[SPACE-Tag-HD-protocol.docx](SPACE-Tag-HD-protocol.docx).
 
-> This repository is private while the manuscript is in revision. `index.html` is built and
-> committed on every update, so turning on GitHub Pages (Settings → Pages → Deploy from a branch →
-> `main` → `/ (root)`) publishes the site immediately, at
-> `https://chaoyan115.github.io/SPACE-Tag-HD-protocol/`. Pages requires the repository to be public.
+## Before your first run
+
+Start with the [protocols home page](https://chaoyan115.github.io/SPACE-Tag-protocol/start.html). It links
+all three protocols and shows the order in which to use them:
+
+```
+1. Section and check the tissue           H&E on one section
+2. Validate the antibody                  immunofluorescence on a plain slide
+3. CUT&Tag test on a plain slide          standard Nextera adapters, PCR, gel
+4. IVT test on a plain slide              full Day 1, then RNA purification and TapeStation
+5. Spatial experiment                     SPACE-Tag (Visium) or SPACE-Tag-HD (Visium HD)
+6. Library QC                             fragment analyzer, then a shallow sequencing run
+7. Deep sequencing and analysis
+```
+
+Steps 2 to 4 use plain glass slides, a gel and one TapeStation run, and catch most failures before a
+spatial slide is used. Step 3 is the
+[CUT&Tag test](https://chaoyan115.github.io/SPACE-Tag-protocol/cuttag-test.html) and step 4 the
+[IVT test](https://chaoyan115.github.io/SPACE-Tag-protocol/ivt-test.html).
 
 ## Relationship to SPACE-Tag
 
@@ -29,35 +44,6 @@ CytAssist. The H&E workflow also differs, and 10x warns against substituting one
 Corrections, questions, and reports of what did or did not work in your hands are welcome. Open an
 [issue](https://github.com/chaoyan115/SPACE-Tag-HD-protocol/issues) or start a
 [discussion](https://github.com/chaoyan115/SPACE-Tag-HD-protocol/discussions).
-
-## Editing workflow
-
-Edit `protocol.md` only. Everything else is generated or is styling.
-
-```bash
-cd /gpfs/commons/home/cyan/data/7_space_tag_hd/5_wiki/SPACE-Tag-HD-protocol
-
-make html   # pandoc protocol.md -> index.html (the published web page)
-make docx   # pandoc protocol.md -> SPACE-Tag-HD-protocol.docx
-make push   # git add -A, commit with today's date, git push
-make all    # build html + docx, then push
-```
-
-`make all` is the usual command. It rebuilds both outputs before pushing, so the committed files
-always match the current `protocol.md`.
-
-## First-time setup
-
-```bash
-pandoc --version
-# if missing:
-/gpfs/commons/home/cyan/.local/bin/micromamba install -n base -c conda-forge pandoc -y
-```
-
-## Optional: custom Word styles
-
-Place a `reference.docx` in this folder and `make docx` picks it up automatically as a formatting
-template.
 
 ## Source documents
 

@@ -3,7 +3,8 @@
 SPACE-Tag integrates spatial barcoding  with CUT&Tag-based epigenomic profiling. Antibody-guided PA-Tn5 tagmentation generates transcribable DNA fragments at target chromatin loci, which are then spatially captured via in vitro transcription and reverse transcription on the Visium-HD slide.
 
 **Tags:** Spatial Epigenomics | CUT&Tag | Visium | PA-Tn5 | Histone Modifications  
-**Last updated:** September 2, 2026
+**Last updated:** November 2026  
+**Before your first run:** see [How to start](https://chaoyan115.github.io/SPACE-Tag-protocol/start.html) and the [IVT test on plain slides](https://chaoyan115.github.io/SPACE-Tag-protocol/ivt-test.html).
 
 ---
 
@@ -170,7 +171,7 @@ Dilute PA-Tn5 to **0.5 mg/ml** using dilution buffer:
 ## Day 1 — Protocol Steps
 ### Step 0: Load the PA-Tn5
 
-> **Rationale:** I found freshly loaded Transposome works the best (highest activity and more stable)
+> **Rationale:** Freshly loaded transposome gives the highest and most stable activity.
 
 **Transposome assembly:**
 
@@ -188,7 +189,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 
 **Tissue fixation:**
 
-1. Section tissue onto the capture area of a Superfrost™ Plus Microscope Slides (22-037-246, Fisher, draw capture areas at the back of slides according to the cassete you are going to use) at a thickness of **10 µm**.
+1. Section tissue onto the capture area of a Superfrost™ Plus Microscope Slides (22-037-246, Fisher, draw capture areas at the back of slides according to the cassette you are going to use) at a thickness of **10 µm**.
 2. Place the slide (tissue surface up) on the thermomixer. Incubate for 5 min at 37°C.
 3. Remove the slide; wipe excess liquid from the back without touching tissue sections.
 4. Apply **1 ml of 0.2% formaldehyde** in 1xPBS to cover the tissue. Incubate at RT for 10 min.
@@ -201,7 +202,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 
 1. Prepare **1x BD Perm buffer** on ice.
 2. Apply **70 µl** 1x BD Perm buffer to each well.
-3. Incubate for **30 min at 4°C** (in referigerater).
+3. Incubate for **30 min at 4°C** (in a refrigerator).
 
 ---
 
@@ -247,7 +248,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 4. Remove HCl. 
 5. Add **100 µl of 1X NEB buffer 2** and incubate for 5 min at RT.
 
-> **note:** the 2min clearing here is optimized for mouse brain tissue, for other tissue types, this time might needs optimization.
+> **Note:** The 2 min clearing time was optimized for mouse brain. Other tissue types may need a different time; test it on plain slides first with the [IVT test](https://chaoyan115.github.io/SPACE-Tag-protocol/ivt-test.html).
 
 ---
 
@@ -266,7 +267,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 | Klenow (exo⁻) | 2 µl |
 
 1. Remove buffer; add 70 µl fill-in solution. Incubate at **37°C for 30 min** without shaking.
-5. Add **100 µl of 1X T7 buffer** and incubate for 5 min at RT.
+2. Add **100 µl of 1X T7 buffer** and incubate for 5 min at RT.
 
 > A Thermotop is recommended for even temperature distribution.
 
@@ -281,7 +282,7 @@ b. Set thermomixer to **37°C** and allow to equilibrate for 5 min.
 | Reagent | Volume (µl) |
 |---|---|
 | nuclease-free water | 35.0 |
-| 5× Thermo EP0111 buffer (COMMERCIAL) | 14.0 |
+| 5× T7 reaction buffer (Thermo EP0111) | 14.0 |
 | 25 mM-each rNTP (NEB N0466) | 11.2 |
 | 200 mM MgCl₂ working stock | 5.6  |
 | RNase inhibitor | 3.5  |
@@ -428,7 +429,7 @@ Solution Mailer from −20°C and keep it on ice.
 > **SPACE-Tag notes (untested).** Two points in this step have not been benchmarked on SPACE-Tag
 > material. First, the handbook's **1 min** fixation is set for an unfixed cryosection, where
 > methanol/acetone both fixes and permeabilises; here the tissue is already formaldehyde-fixed and
-> the only job of this step is to hold free IVT RNA in place, which the previous protocol did with
+> the only job of this step is to hold free IVT RNA in place, which the regular-Visium SPACE-Tag protocol does with
 > 30 min of methanol at −20°C. Second, the Enhancer is a proprietary reagent developed for the HD 3'
 > mRNA assay and its effect on IVT RNA retention is unknown. If capture is low, test a lengthened
 > fixation and an Enhancer-omitted arm as paired sections on the same slide, read out as unique
@@ -780,5 +781,5 @@ Purify with **1x SPRI**; elute in 50 µl. Use 10 µl for index PCR.
 - N7 indexing primer: `CAAGCAGAAGACGGCATACGAGATNNNNNNNNGTCTCGTGGGCTCGG`
 
 **Final Cleanup:**
-Run a gel to check product size first, we do see variations on products vs primer dimer distributions.
+Run a gel to check product size first, because the ratio of product to primer dimer varies between runs.
 Perform **1x SPRI purification** twice(target product ~400bp), for pure product
